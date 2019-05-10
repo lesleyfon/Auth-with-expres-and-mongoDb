@@ -1,0 +1,6 @@
+#  Session — Information pertaining to a specific user of a website
+#  Cookie — File managed by the web browser that can save information from a website
+Q: By default, the express-session module stores session data in the web server's RAM. Why might that be a problem?
+    a: Because if  too many people log in, the session data might fill the RAM AND CRASH THE SERVER
+Q: Why are session variables typically stored on the server rather than in a cookie on the browser?
+    a: cookies can last longer than a session, but that age of the data in the cookie isn't important.
