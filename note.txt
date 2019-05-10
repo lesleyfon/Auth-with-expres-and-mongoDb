@@ -4,3 +4,4 @@ Q: By default, the express-session module stores session data in the web server'
     a: Because if  too many people log in, the session data might fill the RAM AND CRASH THE SERVER
 Q: Why are session variables typically stored on the server rather than in a cookie on the browser?
     a: cookies can last longer than a session, but that age of the data in the cookie isn't important.
+You wouldn't want to use a session to store all user data -- sessions don't stick around (so the data would be lost) and it's more efficient to store lots of data in a database.

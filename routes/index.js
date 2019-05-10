@@ -47,7 +47,18 @@ router.post("/login", function(req, res, next){
     return next(err);
   }
 })
-
+router.get("/logout", function(req, res, next){
+  if(req.session){
+    //when the logout button is clicked and it redirects us to the logout route, we delete the session but first is theres an err we show the error else we redirect to the home page
+    req.session.destroy(function(err){
+      if(err){
+        return next(err)
+      } else{
+        return res.redirect('/')
+      }
+    })
+  }
+});
 // get /register
 router.get("/register", function(req, res, next){
   return res.render('register', {title: 'Sign Up'})
