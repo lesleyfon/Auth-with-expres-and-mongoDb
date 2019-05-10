@@ -25,14 +25,13 @@ router.post("/register", function(req, res, next){
       favoriteBook: req.body.favoriteBook,
       password: req.body.password,
     }
-    // use Schema create method to insert document into mongodb
+    // Use Schema create method to insert document into mongodb
     User.create(userData, function(error, user){
       if(error){
         return next(error)
       } else{
         return res.redirect("/profile")
       }
-
     })
   
   }else{
