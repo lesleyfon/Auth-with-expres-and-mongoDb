@@ -2,14 +2,35 @@ var express = require('express');
 var router = express.Router();
 var User = require('./../models/user')
 
+// Get //Profile
+router.get('/profile', function(req, res, next){
+  if(!req.session.userId){
+    var err = new Error("You are not authorized to view this page!!!")
+    // 403 forbidden
+    err.status = 403;
+    return next(err)
+  }
+  User.findById(req.session.userId).exec(function(err, user){
+      if(err){
+        return next(err)
+      } else{
+          return res.render('Profile', {title: "Profile", name: user.name, favorite: user.favoriteBook})
+      }
+  })
+})
+
+// get //login
 router.get("/login", function(req, res, next){
   
   return res.render("Login", {title: "Login"});
 })
+//Post // Login
 router.post("/login", function(req, res, next){
   if(req.body.email && req.body.password){
     User.authenticate(req.body.email, req.body.password, function(err, user){
-      if(err|| user){
+      // if err and theres no user then create and error
+      if(err || !user){
+        
         var error = new Error("Wrong email or password");
         error.status = 401;
         return next(error);
