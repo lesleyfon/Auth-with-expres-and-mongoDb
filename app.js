@@ -1,25 +1,17 @@
 // a popular web application framework written in node.js
 var express = require('express');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose')
-var session = require("express-session")
+var mongoose = require('mongoose');
+var session = require("express-session");
+// passing session let Connect mongo acces session
+var MongoStore = require("connect-mongo")(session);
 var app = express();
 
 
-// use session for tracking login
-app.use(session({
-  //Secret : Other servers can't access session data, unless you program that ability into your app by creating an API.
-  secret: "treehouse loves you",
-  resave: true,
-  saveUninitialized: false
-}));
+
 
 // Maker user id available to our templates
-app.use(function(req, res, next){
-  //
-  res.locals.currentUser = req.session.userId;
-  next()
-});
+
 
 // mongodb connection
 mongoose.connect("mongodb://localhost:27017/bookworm");
@@ -27,7 +19,21 @@ mongoose.connect("mongodb://localhost:27017/bookworm");
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 
-
+// use session for tracking login
+app.use(session({
+  //Secret : Other servers can't access session data, unless you program that ability into your app by creating an API.
+  secret: "treehouse loves you",
+  resave: true,
+  saveUninitialized: false, 
+  store : new MongoStore({
+  mongooseConnection: db
+  })
+}));
+app.use(function(req, res, next){
+  console.log(req.session)
+  res.locals.currentUser = req.session.userId;
+  next()
+});
 // parse incoming requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

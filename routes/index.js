@@ -1,15 +1,17 @@
 var express = require('express');
 var router = express.Router();
 var User = require('./../models/user')
+var mid = require("./../midleware")
 
 // Get //Profile
-router.get('/profile', function(req, res, next){
-  if(!req.session.userId){
-    var err = new Error("You are not authorized to view this page!!!")
-    // 403 forbidden
-    err.status = 403;
-    return next(err)
-  }
+router.get('/profile', mid.reqLogin, function(req, res, next){
+  // same as middlewaregit 
+  // if(!req.session.userId){
+  //   var err = new Error("You are not authorized to view this page!!!")
+  //   // 403 forbidden
+  //   err.status = 403;
+  //   return next(err)
+  // }
   User.findById(req.session.userId).exec(function(err, user){
       if(err){
         return next(err)
@@ -20,7 +22,7 @@ router.get('/profile', function(req, res, next){
 })
 
 // get //login
-router.get("/login", function(req, res, next){
+router.get("/login", mid.loggedOut, function(req, res, next){
   
   return res.render("Login", {title: "Login"});
 })
@@ -60,7 +62,8 @@ router.get("/logout", function(req, res, next){
   }
 });
 // get /register
-router.get("/register", function(req, res, next){
+router.get("/register", mid.loggedOut ,function(req, res, next){
+  
   return res.render('register', {title: 'Sign Up'})
 })
 
